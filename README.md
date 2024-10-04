@@ -2,7 +2,7 @@
 
 ## Setup 
 ```
-git clone https://github.com/sitialyanrrmh/project_analisis_data.git
+git clone https://github.com/sitialyanrrmh/bike-sharing-analysis.git
 cd bike-sharing-streamlit
 virtualenv venv
 ```
