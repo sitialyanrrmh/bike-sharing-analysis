@@ -29,7 +29,7 @@ else:
         ax.set_title('Average Total Renters per Week', fontsize=16)
         ax.set_xlabel('Day', fontsize=12)
         ax.set_ylabel('Average Total Renters', fontsize=12)
-        ax.set_xticklabels(seasons, rotation=45)
+        ax.set_xticklabels(weeks, rotation=45)
         ax.legend()
         ax.grid(True)
 
