@@ -26,7 +26,7 @@ else:
     def plot_average_renters_per_day():
         fig, ax = plt.subplots(figsize=(10, 6))
         ax.plot(weekday_average['weekday'], weekday_average['avg_cnt'], marker='o', label='Avg Total Renters', color='green')
-        ax.set_title('Average Total Renters per Week', fontsize=16)
+        ax.set_title('Average Total Renters per Day', fontsize=16)
         ax.set_xlabel('Day', fontsize=12)
         ax.set_ylabel('Average Total Renters', fontsize=12)
         ax.set_xticks(weekday_average['weekday'])
