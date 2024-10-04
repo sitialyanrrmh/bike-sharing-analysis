@@ -4,7 +4,7 @@ import seaborn as sns
 import pandas as pd
 
 # Load data from the CSV file directly
-file_path = 'https://github.com/sitialyanrrmh/bike-sharing-analysis/blob/4659abb3a1bd7f7068f08f6972a6dc1bb11ca87a/dashboard/main.csv'
+file_path = 'https://github.com/sitialyanrrmh/project_analisis_data/blob/0840cbaeb0a8ce5fcce12b1aed44968a77191d9b/dashboard/main.csv'
 day_df = pd.read_csv(file_path)
 
 # Check if required columns are present
