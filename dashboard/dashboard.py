@@ -19,6 +19,9 @@ else:
     weekday_average.columns = ['weekday', 'avg_casual', 'avg_registered', 'avg_cnt']
     weekday_average[['avg_casual', 'avg_registered', 'avg_cnt']] = weekday_average[['avg_casual', 'avg_registered', 'avg_cnt']].astype(int)
 
+    # Define the week names for x-axis labels
+    weeks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
     # Function to plot average renters per day
     def plot_average_renters_per_day():
         fig, ax = plt.subplots(figsize=(10, 6))
@@ -26,10 +29,11 @@ else:
         ax.set_title('Average Total Renters per Week', fontsize=16)
         ax.set_xlabel('Day', fontsize=12)
         ax.set_ylabel('Average Total Renters', fontsize=12)
+        ax.set_xticklabels(seasons, rotation=45)
         ax.legend()
         ax.grid(True)
-        plt.xticks(rotation=45)
-        
+
+              
         # Annotate the points with average total renters
         for i in range(len(weekday_average)):
             ax.annotate(weekday_average['avg_cnt'].iloc[i], 
@@ -47,6 +51,9 @@ else:
     season_average.columns = ['season', 'avg_casual', 'avg_registered', 'avg_cnt']
     season_average[['avg_casual', 'avg_registered', 'avg_cnt']] = season_average[['avg_casual', 'avg_registered', 'avg_cnt']].astype(int)
 
+    # Define the week seasons for x-axis labels
+    seasons = ['Winter', 'Spring', 'Summer', 'Fall']
+    
     # Function to plot average renters per season
     def plot_average_renters_per_season():
         fig, ax = plt.subplots(figsize=(10, 6))
@@ -54,6 +61,7 @@ else:
         ax.set_title('Average Total Renters per Season', fontsize=16)
         ax.set_xlabel('Season', fontsize=12)
         ax.set_ylabel('Average Total Renters', fontsize=12)
+        ax.set_xticklabels(seasons, rotation=45)
 
         # Annotate the bars with average total renters
         for p in ax.patches:
