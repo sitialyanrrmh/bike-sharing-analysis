@@ -1,1 +1,1 @@
-https://dashboardbike1.streamlit.app/
+https://dashboard12.streamlit.app/
