@@ -15,46 +15,41 @@ else:
     # Average renters per day
     weekday_total = day_df.groupby('weekday')[['casual', 'registered', 'cnt']].sum().reset_index()
     weekday_average = weekday_total.copy()
-    weekday_average[['casual', 'registered', 'cnt']] = weekday_total[['casual', 'registered', 'cnt']] / (52 * 2)  # jumlah bulan dalam 2 tahun * jumlah minggu
+    weekday_average[['casual', 'registered', 'cnt']] = weekday_total[['casual', 'registered', 'cnt']] / (52 * 2)
     weekday_average.columns = ['weekday', 'avg_casual', 'avg_registered', 'avg_cnt']
     weekday_average[['avg_casual', 'avg_registered', 'avg_cnt']] = weekday_average[['avg_casual', 'avg_registered', 'avg_cnt']].astype(int)
 
-    # Define the week names for x-axis labels
     weeks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+    # Filter options for user
+    selected_weekday = st.selectbox('Select a weekday:', weeks)
+    selected_month = st.selectbox('Select a month:', ['January', 'February', 'March', 'April', 'May', 'June', 
+              'July', 'August', 'September', 'October', 'November', 'December'])
+
+    # Function to filter data
+    def filter_data():
+        weekday_index = weeks.index(selected_weekday)
+        month_index = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December'].index(selected_month) + 1
+        filtered_df = day_df[(day_df['weekday'] == weekday_index) & (day_df['mnth'] == month_index)]
+        return filtered_df
 
     # Function to plot average renters per day
     def plot_average_renters_per_day():
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.plot(weekday_average['weekday'], weekday_average['avg_cnt'], marker='o', label='Avg Total Renters', color='green')
-        ax.set_title('Average Total Renters per Day', fontsize=16)
-        ax.set_xlabel('Day', fontsize=12)
-        ax.set_ylabel('Average Total Renters', fontsize=12)
-        ax.set_xticks(weekday_average['weekday'])
-        ax.set_xticklabels(weeks, rotation=45)
-        ax.legend()
-        ax.grid(True)
-
-              
-        # Annotate the points with average total renters
-        for i in range(len(weekday_average)):
-            ax.annotate(weekday_average['avg_cnt'].iloc[i], 
-                        (weekday_average['weekday'].iloc[i], weekday_average['avg_cnt'].iloc[i]),
-                        textcoords="offset points", 
-                        xytext=(0,5), 
-                        ha='center')
-
-        st.pyplot(fig)
+        filtered_df = filter_data()
+        if not filtered_df.empty:
+            avg_cnt = filtered_df['cnt'].mean()
+            st.write(f"Average Total Renters on {selected_weekday} in {selected_month}: {int(avg_cnt)}")
+        else:
+            st.write("No data available for the selected filters.")
 
     # Average renters per season
     season_total = day_df.groupby('season')[['casual', 'registered', 'cnt']].sum().reset_index()
     season_average = season_total.copy()
-    season_average[['casual', 'registered', 'cnt']] = season_total[['casual', 'registered', 'cnt']] / 2  # jumlah season dalam 2 tahun
+    season_average[['casual', 'registered', 'cnt']] = season_total[['casual', 'registered', 'cnt']] / 2
     season_average.columns = ['season', 'avg_casual', 'avg_registered', 'avg_cnt']
     season_average[['avg_casual', 'avg_registered', 'avg_cnt']] = season_average[['avg_casual', 'avg_registered', 'avg_cnt']].astype(int)
 
-    # Define the week seasons for x-axis labels
-    seasons = ['Winter', 'Spring', 'Summer', 'Fall']
-    
     # Function to plot average renters per season
     def plot_average_renters_per_season():
         fig, ax = plt.subplots(figsize=(10, 6))
@@ -62,9 +57,8 @@ else:
         ax.set_title('Average Total Renters per Season', fontsize=16)
         ax.set_xlabel('Season', fontsize=12)
         ax.set_ylabel('Average Total Renters', fontsize=12)
-        ax.set_xticklabels(seasons, rotation=45)
+        ax.set_xticklabels(season_average['season'], rotation=45)
 
-        # Annotate the bars with average total renters
         for p in ax.patches:
             ax.annotate(f'{int(p.get_height())}', 
                         (p.get_x() + p.get_width() / 2., p.get_height()), 
@@ -77,13 +71,9 @@ else:
     # Average renters per month
     month_total = day_df.groupby('mnth')[['casual', 'registered', 'cnt']].sum().reset_index()
     month_average = month_total.copy()
-    month_average[['casual', 'registered', 'cnt']] = month_total[['casual', 'registered', 'cnt']] / 2  # membagi dengan jumlah bulan dalam 2 tahun
+    month_average[['casual', 'registered', 'cnt']] = month_total[['casual', 'registered', 'cnt']] / 2
     month_average.columns = ['month', 'avg_casual', 'avg_registered', 'avg_cnt']
     month_average[['avg_casual', 'avg_registered', 'avg_cnt']] = month_average[['avg_casual', 'avg_registered', 'avg_cnt']].astype(int)
-
-    # Define the month names for x-axis labels
-    months = ['January', 'February', 'March', 'April', 'May', 'June', 
-              'July', 'August', 'September', 'October', 'November', 'December']
 
     # Function to plot average renters per month
     def plot_average_renters_per_month():
@@ -97,7 +87,6 @@ else:
         ax.grid(True)
         ax.legend()
 
-        # Annotate the points with average total renters
         for i in range(len(month_average)):
             ax.annotate(month_average['avg_cnt'].iloc[i], 
                         (month_average['month'].iloc[i], month_average['avg_cnt'].iloc[i]),
@@ -109,11 +98,8 @@ else:
 
     # Heatmap of correlation
     def plot_heatmap():
-        # Pilih kolom yang diinginkan
         variables_x = ['temp', 'atemp', 'hum', 'windspeed']
         variables_y = ['casual', 'registered', 'cnt']
-
-        # Menghitung korelasi hanya antara variabel-variabel yang diinginkan
         correlation_matrix = day_df[variables_y + variables_x].corr().loc[variables_y, variables_x]
         
         fig, ax = plt.subplots(figsize=(8, 6))
